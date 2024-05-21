@@ -1,0 +1,20 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+  "files.exclude": {
+    "out": true,
+    "client": true,
+    "server": true,
+    "modules": true,
+    "node_modules": true,
+    ".git": true
+  },
+  "search.exclude": {
+    "out": true // set this to false to include "out" folder in search results
+  },
+  // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
+  "typescript.tsc.autoDetect": "off",
+  // "javascript.format.enable": false,
+  "typescript.locale": "en",
+  "gitlens.codeLens.enabled": false,
+  "editor.fontLigatures": true
+}

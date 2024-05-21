@@ -1,0 +1,99 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "vscode-abap-remote-fs"
+    },
+    {
+      "path": "client"
+    },
+    {
+      "path": "server"
+    },
+    {
+      "path": "wiki"
+    },
+    {
+      "path": "modules/sharedapi"
+    },
+    {
+      "path": "modules/abapObject"
+    },
+    {
+      "path": "modules/abapfs"
+    }
+  ],
+  "settings": {
+    "typescript.tsc.autoDetect": "off",
+    "typescript.locale": "en",
+    "gitlens.codeLens.enabled": false,
+    "prettier.semi": false,
+    "editor.formatOnSave": true,
+    "files.exclude": {
+      "**/.classpath": true,
+      "**/.project": true,
+      "**/.settings": true,
+      "**/.factorypath": true,
+      "**/node_modules/**": true
+    },
+    "prettier.arrowParens": "avoid",
+    "prettier.proseWrap": "never",
+    "prettier.trailingComma": "none",
+    "markdownlint.config": {
+      "no-duplicate-header": false
+    },
+    "jest.disabledWorkspaceFolders": [
+      "vscode-abap-remote-fs",
+      "wiki",
+      "sharedapi"
+    ],
+    "tslint.exclude": [
+      "**/node_modules/**"
+    ],
+    "githubIssues.queries": [
+      {
+        "label": "My Issues",
+        "query": "default"
+      },
+      {
+        "label": "All open Issues",
+        "query": "state:open repo:${owner}/${repository} sort:created-desc"
+      }
+    ],
+    "[html]": {
+      "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "[markdown]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "[xml]": {
+      "editor.defaultFormatter": "mikeburgh.xml-format"
+    },
+    "typescript.format.enable": true,
+    "typescript.format.insertSpaceAfterCommaDelimiter": true,
+    "typescript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": true,
+    "typescript.format.insertSpaceAfterKeywordsInControlFlowStatements": true,
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": true,
+    "typescript.format.insertSpaceBeforeAndAfterBinaryOperators": true,
+    "typescript.format.insertSpaceAfterSemicolonInForStatements": true,
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": false,
+    "typescript.format.insertSpaceAfterConstructor": false,
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets": false,
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces": false,
+    "typescript.format.semicolons": "remove",
+    "javascript.format.semicolons": "remove",
+    "typescript.format.insertSpaceAfterTypeAssertion": false,
+    "typescript.format.insertSpaceBeforeFunctionParenthesis": false,
+    "typescript.format.placeOpenBraceOnNewLineForControlBlocks": false,
+    "typescript.format.placeOpenBraceOnNewLineForFunctions": false,
+    "typescript.preferences.quoteStyle": "auto"
+  }
+}

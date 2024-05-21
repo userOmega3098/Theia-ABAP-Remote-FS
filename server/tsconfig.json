@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2019",
+    "rootDir": "src",
+    "moduleResolution": "node",
+    "outDir": "./out",
+    "sourceMap": true,
+    "strict": true,
+    // "noUnusedLocals": true,
+    "composite": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true
+  },
+  "include": ["src"],
+  "exclude": [
+    "node_modules",
+    ".vscode-test"
+    // "src/**/*.test.ts"
+  ]
+}

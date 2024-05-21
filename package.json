@@ -1,0 +1,1306 @@
+{
+  "name": "vscode-abap-remote-fs",
+  "displayName": "ABAP remote filesystem",
+  "description": "Work on your ABAP code straight from the server",
+  "version": "1.7.10",
+  "publisher": "murbani",
+  "license": "MIT",
+  "icon": "client/images/abapfs_logo.png",
+  "author": {
+    "email": "marcello.urbani@gmail.com",
+    "name": "Marcello Urbani"
+  },
+  "homepage": "https://github.com/marcellourbani/vscode_abap_remote_fs",
+  "engines": {
+    "vscode": "^1.39.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marcellourbani/vscode_abap_remote_fs.git"
+  },
+  "keywords": [
+    "ABAP",
+    "sap",
+    "filesystem",
+    "remote"
+  ],
+  "extensionDependencies": [
+    "larshp.vscode-abap",
+    "hudakf.cds",
+    "murbani.winregistry"
+  ],
+  "activationEvents": [
+    "onFileSystem:adt",
+    "onCommand:abapfs.connect",
+    "onCommand:abapfs.createConnection"
+  ],
+  "main": "./client/dist/extension",
+  "scripts": {
+    "vscode:prepublish": "cd client && cd .. && npm run webpack",
+    "webpack": "npm run build_modules&&cd server && npm run webpack && cd ../client && npm run webpack",
+    "build": "npm run webpack",
+    "build_modules": "cd modules/abapObject&& npm run build&&cd ../abapfs&& npm run build&&cd ../sharedapi&& npm run build",
+    "compile": "npm run webpack",
+    "test": "npm run test-object && npm run test-abapfs && npm run test-server && npm run test-client",
+    "test-server": "cd server&& npm run test",
+    "test-client": "cd client&& npm run test",
+    "test-object": "cd modules/abapObject&& npm run test",
+    "test-abapfs": "cd modules/abapfs&& npm run test",
+    "createpackage": "vsce package",
+    "deploy": "vsce publish",
+    "inst_dep_sharedapi": "cd modules/sharedapi&& npm i && npm run build&& cd ../..",
+    "inst_dep_object": "cd modules/abapObject&& npm i && npm run build&& cd ../..",
+    "inst_dep_abapfs": "cd modules/abapfs&& npm i && npm run build&& cd ../..",
+    "clean": "rimraf out *.vsix node_modules modules/sharedapi/out modules/sharedapi/node_modules&& cd server && npm run clean&& cd ../client &&npm run clean && cd .. ",
+    "postinstall": "npm run inst_dep_sharedapi && npm run inst_dep_object &&npm run inst_dep_abapfs && cd server && npm i && cd ../client && npm i"
+  },
+  "devDependencies": {
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^13.9.5",
+    "concurrently": "^6.3.0",
+    "rimraf": "^3.0.2",
+    "tslint": "^6.1.0",
+    "typescript": "^4.9.4",
+    "vsce": "^2.15.0",
+    "webpack-cli": "^5.0.1"
+  },
+  "contributes": {
+    "breakpoints": [
+      {
+        "language": "abap"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "abap",
+        "label": "ABAP on server",
+        "languages": [
+          "abap"
+        ],
+        "configurationAttributes": {
+          "attach": {
+            "required": [
+              "root"
+            ],
+            "properties": {
+              "connId": {
+                "type": "string",
+                "description": "Absolute path to a text file.",
+                "default": "${command:abapfs.pickAdtRootConn}"
+              },
+              "debugUser": {
+                "type": "string",
+                "description": "User to debug for (defaults to current user)",
+                "default": ""
+              },
+              "terminalMode": {
+                "type": "boolean",
+                "description": "Terminal mode",
+                "default": false
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "abap",
+            "request": "attach",
+            "name": "Attach to server",
+            "connId": "${command:abapfs.pickAdtRootConn}"
+          }
+        ]
+      }
+    ],
+    "customEditors": [
+      {
+        "viewType": "abapfs.msagn",
+        "displayName": "Message Class",
+        "selector": [
+          {
+            "filenamePattern": "*.msagn.xml"
+          }
+        ]
+      },
+      {
+        "viewType": "abapfs.http",
+        "displayName": "HTTP service",
+        "selector": [
+          {
+            "filenamePattern": "*.http.xml"
+          }
+        ]
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "abapfs",
+          "title": "Abap FS",
+          "icon": "client/images/abapfs_activitybar.svg"
+        }
+      ],
+      "panel": [
+        {
+          "id": "abapfsPanel",
+          "title": "ABAP FS",
+          "icon": "${book}"
+        }
+      ]
+    },
+    "views": {
+      "abapfsPanel": [
+        {
+          "type": "webview",
+          "id": "abapfs.views.atcdocs",
+          "name": "ATC documentation",
+          "when": "abapfs:extensionActive",
+          "contextualTitle": "ATC documentation",
+          "visibility": "visible",
+          "icon": "${book}"
+        }
+      ],
+      "abapfs": [
+        {
+          "id": "abapfs.transports",
+          "name": "Transports",
+          "when": "abapfs:extensionActive"
+        },
+        {
+          "id": "abapfs.dumps",
+          "name": "Dumps",
+          "when": "abapfs:extensionActive"
+        },
+        {
+          "id": "abapfs.atcFinds",
+          "name": "ATC finds",
+          "when": "abapfs:extensionActive"
+        },
+        {
+          "id": "abapfs.abapgit",
+          "name": "abapGit",
+          "when": "abapfs:extensionActive"
+        }
+      ],
+      "explorer": [
+        {
+          "id": "abapfs.favorites",
+          "name": "Favorites",
+          "when": "abapfs:extensionActive"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "abapfs.connect",
+        "title": "AbapFs Connect to an ABAP system"
+      },
+      {
+        "command": "abapfs.createConnection",
+        "title": "AbapFs Create connection"
+      },
+      {
+        "command": "abapfs.search",
+        "title": "AbapFs Search for object"
+      },
+      {
+        "command": "abapfs.exportToJson",
+        "title": "Export to JSON (clipboard)"
+      },
+      {
+        "command": "abapfs.create",
+        "title": "AbapFs Create object"
+      },
+      {
+        "command": "abapfs.createtestinclude",
+        "title": "AbapFs Create test class include"
+      },
+      {
+        "command": "abapfs.addfavourite",
+        "title": "AbapFs Add favourite"
+      },
+      {
+        "command": "abapfs.runClass",
+        "title": "AbapFs Run console application"
+      },
+      {
+        "command": "abapfs.selectDB",
+        "title": "AbapFs Select Query"
+      },
+      {
+        "command": "abapfs.tableContents",
+        "title": "AbapFs Show table contents",
+        "group": "navigation@-10",
+        "icon": "$(database)"
+      },
+      {
+        "command": "abapfs.deletefavourite",
+        "title": "AbapFs delete favourite",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "abapfs.activate",
+        "title": "AbapFs Activate current object (will also save if dirty)",
+        "icon": {
+          "dark": "client/images/activate_single.svg",
+          "light": "client/images/activate_single.svg"
+        }
+      },
+      {
+        "command": "abapfs.refreshtransports",
+        "title": "AbapFs refresh transports",
+        "icon": {
+          "dark": "client/images/dark/icon-refresh.svg",
+          "light": "client/images/light/icon-refresh.svg"
+        }
+      },
+      {
+        "command": "abapfs.refreshrepos",
+        "title": "Refresh abapGit repositories",
+        "icon": {
+          "dark": "client/images/dark/icon-refresh.svg",
+          "light": "client/images/light/icon-refresh.svg"
+        }
+      },
+      {
+        "command": "abapfs.pullRepo",
+        "title": "Pull from git",
+        "icon": {
+          "dark": "client/images/dark/icon-pull.svg",
+          "light": "client/images/light/icon-pull.svg"
+        }
+      },
+      {
+        "command": "abapfs.createRepo",
+        "title": "Create abapGit Repo",
+        "icon": {
+          "dark": "client/images/dark/icon-add.svg",
+          "light": "client/images/light/icon-add.svg"
+        }
+      },
+      {
+        "command": "abapfs.unlinkRepo",
+        "title": "Unlink abapGit Repo",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "abapfs.registerSCM",
+        "title": "Register in source control",
+        "icon": {
+          "dark": "client/images/dark/icon-repo.svg",
+          "light": "client/images/light/icon-repo.svg"
+        }
+      },
+      {
+        "command": "abapfs.refreshAbapGit",
+        "title": "Refresh repo contents",
+        "icon": {
+          "dark": "client/images/dark/icon-refresh.svg",
+          "light": "client/images/light/icon-refresh.svg"
+        }
+      },
+      {
+        "command": "abapfs.pushAbapGit",
+        "title": "Commit to current branch",
+        "icon": {
+          "dark": "client/images/dark/check.svg",
+          "light": "client/images/light/check.svg"
+        }
+      },
+      {
+        "command": "abapfs.pullAbapGit",
+        "title": "Pull from current branch (overwrites all changes)",
+        "icon": {
+          "dark": "client/images/dark/icon-pull.svg",
+          "light": "client/images/light/icon-pull.svg"
+        }
+      },
+      {
+        "command": "abapfs.addAbapGit",
+        "title": "Stage changes",
+        "icon": {
+          "dark": "client/images/dark/add.svg",
+          "light": "client/images/light/add.svg"
+        }
+      },
+      {
+        "command": "abapfs.removeAbapGit",
+        "title": "Unstage changes",
+        "icon": {
+          "dark": "client/images/dark/remove.svg",
+          "light": "client/images/light/remove.svg"
+        }
+      },
+      {
+        "command": "abapfs.resetAbapGitPwd",
+        "title": "AbapFs forget git password"
+      },
+      {
+        "command": "abapfs.execute",
+        "title": "AbapFs Show in GUI"
+      },
+      {
+        "command": "abapfs.unittest",
+        "title": "AbapFs run unit tests"
+      },
+      {
+        "command": "abapfs.runInGui",
+        "title": "AbapFs execute code"
+      },
+      {
+        "command": "abapfs.openTransportObject",
+        "title": "AbapFs Open transportable object"
+      },
+      {
+        "command": "abapfs.refreshDumps",
+        "title": "Refresh dumps",
+        "icon": {
+          "dark": "client/images/dark/icon-refresh.svg",
+          "light": "client/images/light/icon-refresh.svg"
+        }
+      },
+      {
+        "command": "abapfs.transportCopyNumber",
+        "title": "Copy transport number to clipboard",
+        "icon": {
+          "dark": "client/images/dark/icon-clipboard.svg",
+          "light": "client/images/light/icon-clipboard.svg"
+        }
+      },
+      {
+        "command": "abapfs.transportRunAtc",
+        "title": "Run test cockpit on transport",
+        "icon": "$(run)"
+      },
+      {
+        "command": "abapfs.transportOpenGui",
+        "title": "Open transport in GUI"
+      },
+      {
+        "command": "abapfs.deleteTransport",
+        "title": "Delete transport",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "abapfs.revealPackage",
+        "title": "Reveal in explorer"
+      },
+      {
+        "command": "abapfs.openRepo",
+        "title": "Open Repository"
+      },
+      {
+        "command": "abapfs.releaseTransport",
+        "title": "Release transport",
+        "icon": {
+          "dark": "client/images/dark/truck.svg",
+          "light": "client/images/light/truck.svg"
+        }
+      },
+      {
+        "command": "abapfs.transportOwner",
+        "title": "Change transport owner",
+        "icon": {
+          "dark": "client/images/dark/user.svg",
+          "light": "client/images/light/user.svg"
+        }
+      },
+      {
+        "command": "abapfs.transportAddUser",
+        "title": "Add user",
+        "icon": {
+          "dark": "client/images/dark/useradd.svg",
+          "light": "client/images/light/useradd.svg"
+        }
+      },
+      {
+        "command": "abapfs.quickfix",
+        "title": "apply fix"
+      },
+      {
+        "command": "abapfs.transportUser",
+        "title": "List transports for a given user",
+        "icon": {
+          "dark": "client/images/dark/user.svg",
+          "light": "client/images/light/user.svg"
+        }
+      },
+      {
+        "command": "abapfs.openrevstate",
+        "title": "Open current version",
+        "icon": {
+          "dark": "client/images/dark/icon-open-file.svg",
+          "light": "client/images/light/icon-open-file.svg"
+        }
+      },
+      {
+        "command": "abapfs.opendiff",
+        "title": "Open diff with revision",
+        "icon": {
+          "dark": "client/images/dark/icon-compare.svg",
+          "light": "client/images/light/icon-compare.svg"
+        }
+      },
+      {
+        "command": "abapfs.opendiffNormalized",
+        "title": "Open diff normalized",
+        "icon": {
+          "dark": "client/images/dark/icon-compare-formatted.svg",
+          "light": "client/images/light/icon-compare-formatted.svg"
+        }
+      },
+      {
+        "command": "abapfs.transportObjectDiff",
+        "title": "Diff with current version",
+        "icon": {
+          "dark": "client/images/dark/icon-compare.svg",
+          "light": "client/images/light/icon-compare.svg"
+        }
+      },
+      {
+        "command": "abapfs.transportRevision",
+        "title": "Add transport to source control",
+        "icon": "$(versions)"
+      },
+      {
+        "command": "abapfs.clearScmGroup",
+        "title": "Clear",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "abapfs.filterScmGroup",
+        "title": "Filter unchanged",
+        "icon": "$(filter)"
+      },
+      {
+        "command": "abapfs.showdocu",
+        "title": "Show ABAP documentation"
+      },
+      {
+        "command": "abapfs.clearPassword",
+        "title": "AbapFs forget connection password"
+      },
+      {
+        "command": "abapfs.atcChecks",
+        "title": "Run ABAP Test cockpit",
+        "icon": "$(testing-run-icon)"
+      },
+      {
+        "command": "abapfs.atcDocHistoryForward",
+        "title": "Next document",
+        "enablement": "abapfs:atcdoc:navigation:next",
+        "icon": "$(arrow-right)"
+      },
+      {
+        "command": "abapfs.atcDocHistoryBack",
+        "title": "Previous document",
+        "enablement": "abapfs:atcdoc:navigation:back",
+        "icon": "$(arrow-left)"
+      },
+      {
+        "command": "abapfs.atcFilterExemptOff",
+        "title": "Enable refresh on activation",
+        "icon": "$(filter-filled)"
+      },
+      {
+        "command": "abapfs.atcFilterExemptOn",
+        "title": "Enable refresh on activation",
+        "icon": "$(filter)"
+      },
+      {
+        "command": "abapfs.atcAutoRefreshOn",
+        "title": "Enable refresh on activation",
+        "icon": "$(sync-ignored)"
+      },
+      {
+        "command": "abapfs.atcAutoRefreshOff",
+        "title": "Disable refresh on activation",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "abapfs.atcIgnore",
+        "title": "Try to ignore this result",
+        "icon": "$(exclude)"
+      },
+      {
+        "command": "abapfs.atcRefresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "abapfs.atcShowDocumentation",
+        "title": "Show documentation",
+        "icon": "$(book)"
+      },
+      {
+        "command": "abapfs.atcRequestExemption",
+        "title": "Request Exemption on this check",
+        "icon": "$(check)"
+      },
+      {
+        "command": "abapfs.atcRequestExemptionAll",
+        "title": "Request Exemption on multiple objects",
+        "icon": "$(check-all)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "abapfs.execute",
+        "key": "Ctrl+Shift+F6",
+        "when": "editorTextFocus && resourceScheme == adt"
+      },
+      {
+        "command": "abapfs.runInGui",
+        "key": "Ctrl+Shift+F5",
+        "when": "editorTextFocus && resourceScheme == adt"
+      },
+      {
+        "command": "debug.jumpToCursor",
+        "key": "shift+f12",
+        "when": "editorTextFocus && resourceScheme == adt && debugState != 'inactive'"
+      },
+      {
+        "command": "abapfs.unittest",
+        "key": "ctrl+shift+f11",
+        "when": "editorTextFocus && resourceScheme == adt && editorLangId == abap "
+      },
+      {
+        "command": "abapfs.atcChecks",
+        "key": "ctrl+shift+f2",
+        "when": "editorTextFocus && resourceScheme == adt && editorLangId == abap "
+      },
+      {
+        "command": "abapfs.showdocu",
+        "key": "F1",
+        "when": "editorTextFocus && resourceScheme == adt && editorLangId == abap "
+      },
+      {
+        "command": "abapfs.activate",
+        "key": "alt+shift+f3",
+        "when": "resourceScheme == adt && editorLangId =~ /abap|cds/ && abapfs:showActivate"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "abapfs.connect"
+        },
+        {
+          "command": "abapfs.createConnection"
+        },
+        {
+          "command": "abapfs.resetAbapGitPwd",
+          "when": "abapfs:extensionActive"
+        },
+        {
+          "command": "abapfs.clearPassword",
+          "when": "abapfs:extensionActive"
+        },
+        {
+          "command": "abapfs.search",
+          "when": "abapfs:extensionActive"
+        },
+        {
+          "command": "abapfs.runClass",
+          "when": "abapfs:extensionActive"
+        },
+        {
+          "command": "abapfs.selectDB",
+          "when": "abapfs:extensionActive"
+        },
+        {
+          "command": "abapfs.create",
+          "when": "abapfs:extensionActive"
+        },
+        {
+          "command": "abapfs.createtestinclude",
+          "when": "abapfs:extensionActive"
+        },
+        {
+          "command": "abapfs.addfavourite",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.deletefavourite",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.activate",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.revealPackage",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.openRepo",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.refreshtransports",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.refreshrepos",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.pullRepo",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.tableContents",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.registerSCM",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.refreshAbapGit",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.pushAbapGit",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.pullAbapGit",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.addAbapGit",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.removeAbapGit",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.createRepo",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.unlinkRepo",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.execute",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.runInGui",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.unittest",
+          "when": "abapfs:extensionActive"
+        },
+        {
+          "command": "abapfs.openTransportObject",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.deleteTransport",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.releaseTransport",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.transportOwner",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.transportAddUser",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.quickfix",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.transportUser",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.opendiff",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.openrevstate",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.transportObjectDiff",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.transportRevision",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.opendiffNormalized",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.clearScmGroup",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.showdocu",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.transportCopyNumber",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.transportOpenGui",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.refreshDumps",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.transportRunAtc",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.atcChecks",
+          "when": "abapfs:extensionActive"
+        },
+        {
+          "command": "abapfs.atcRefresh",
+          "when": "abapfs:extensionActive"
+        },
+        {
+          "command": "abapfs.atcFilterExemptOn",
+          "when": "abapfs:extensionActive"
+        },
+        {
+          "command": "abapfs.atcFilterExemptOff",
+          "when": "abapfs:extensionActive"
+        },
+        {
+          "command": "abapfs.atcAutoRefreshOn",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.atcAutoRefreshOff",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.atcIgnore",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.atcShowDocumentation",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.atcRequestExemption",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.atcRequestExemptionAll",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.atcDocHistoryForward",
+          "when": "hideCommands.never"
+        },
+        {
+          "command": "abapfs.atcDocHistoryBack",
+          "when": "hideCommands.never"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "abapfs.refreshDumps",
+          "group": "inline",
+          "when": "view == abapfs.dumps && viewItem == system"
+        },
+        {
+          "command": "abapfs.deletefavourite",
+          "group": "inline",
+          "when": "view == abapfs.favorites && viewItem == favourite"
+        },
+        {
+          "command": "abapfs.releaseTransport",
+          "group": "inline",
+          "when": "view == abapfs.transports && viewItem == tr_unreleased"
+        },
+        {
+          "command": "abapfs.deleteTransport",
+          "group": "context",
+          "when": "view == abapfs.transports && viewItem == tr_unreleased"
+        },
+        {
+          "command": "abapfs.transportOwner",
+          "group": "context",
+          "when": "view == abapfs.transports && viewItem == tr_unreleased"
+        },
+        {
+          "command": "abapfs.transportAddUser",
+          "group": "context",
+          "when": "view == abapfs.transports && viewItem == tr_unreleased"
+        },
+        {
+          "command": "abapfs.transportUser",
+          "group": "inline",
+          "when": "view == abapfs.transports && viewItem == tr_connection"
+        },
+        {
+          "command": "abapfs.transportCopyNumber",
+          "group": "inline",
+          "when": "view == abapfs.transports && viewItem =~ /tr_(un)?released/ "
+        },
+        {
+          "command": "abapfs.transportRunAtc",
+          "group": "inline",
+          "when": "view == abapfs.transports && viewItem =~ /tr_(un)?released/ "
+        },
+        {
+          "command": "abapfs.transportObjectDiff",
+          "group": "inline",
+          "when": "view == abapfs.transports && viewItem == tr_object"
+        },
+        {
+          "command": "abapfs.transportRevision",
+          "group": "inline",
+          "when": "view == abapfs.transports && viewItem =~ /tr_(un)?released/ "
+        },
+        {
+          "command": "abapfs.transportOpenGui",
+          "group": "context",
+          "when": "view == abapfs.transports && viewItem =~ /tr_(un)?released/ "
+        },
+        {
+          "command": "abapfs.unlinkRepo",
+          "group": "inline",
+          "when": "viewItem == repository || viewItem == repository_push"
+        },
+        {
+          "command": "abapfs.pullRepo",
+          "group": "inline",
+          "when": "view == abapfs.abapgit && viewItem == repository || view == abapfs.abapgit && viewItem == repository_push"
+        },
+        {
+          "command": "abapfs.registerSCM",
+          "group": "inline",
+          "when": "view == abapfs.abapgit &&  viewItem == repository_push"
+        },
+        {
+          "command": "abapfs.createRepo",
+          "group": "inline",
+          "when": "view == abapfs.abapgit  && viewItem == system"
+        },
+        {
+          "command": "abapfs.revealPackage",
+          "group": "context",
+          "when": "view == abapfs.abapgit && viewItem == repository || view == abapfs.abapgit && viewItem == repository_push "
+        },
+        {
+          "command": "abapfs.openRepo",
+          "group": "context",
+          "when": "view == abapfs.abapgit && viewItem == repository || view == abapfs.abapgit && viewItem == repository_push"
+        },
+        {
+          "command": "abapfs.atcRequestExemption",
+          "group": "inline",
+          "when": "view == abapfs.atcFinds && viewItem == finding"
+        },
+        {
+          "command": "abapfs.atcRequestExemptionAll",
+          "group": "inline",
+          "when": "view == abapfs.atcFinds && viewItem == finding"
+        },
+        {
+          "command": "abapfs.atcShowDocumentation",
+          "group": "inline",
+          "when": "view == abapfs.atcFinds && viewItem == finding || view == abapfs.atcFinds && viewItem == finding_exempted"
+        },
+        {
+          "command": "abapfs.atcRefresh",
+          "group": "inline",
+          "when": "view == abapfs.atcFinds"
+        },
+        {
+          "command": "abapfs.atcIgnore",
+          "group": "inline",
+          "when": "view == abapfs.atcFinds && viewItem == finding"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "abapfs.atcRefresh",
+          "group": "navigation",
+          "when": "view == abapfs.atcFinds"
+        },
+        {
+          "command": "abapfs.atcDocHistoryBack",
+          "group": "navigation@1",
+          "when": "view == abapfs.views.atcdocs"
+        },
+        {
+          "command": "abapfs.atcDocHistoryForward",
+          "group": "navigation@2",
+          "when": "view == abapfs.views.atcdocs"
+        },
+        {
+          "command": "abapfs.atcAutoRefreshOn",
+          "group": "navigation",
+          "when": "view == abapfs.atcFinds && !abapfs:atc:autorefreshOn"
+        },
+        {
+          "command": "abapfs.atcAutoRefreshOff",
+          "group": "navigation",
+          "when": "view == abapfs.atcFinds && abapfs:atc:autorefreshOn"
+        },
+        {
+          "command": "abapfs.atcFilterExemptOn",
+          "group": "navigation",
+          "when": "view == abapfs.atcFinds && !abapfs:atc:exemptFilterOn"
+        },
+        {
+          "command": "abapfs.atcFilterExemptOff",
+          "group": "navigation",
+          "when": "view == abapfs.atcFinds && abapfs:atc:exemptFilterOn"
+        },
+        {
+          "command": "abapfs.refreshtransports",
+          "group": "navigation",
+          "when": "view == abapfs.transports"
+        },
+        {
+          "command": "abapfs.refreshrepos",
+          "group": "navigation",
+          "when": "view == abapfs.abapgit"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "abapfs.activate",
+          "group": "navigation",
+          "when": "resourceScheme == adt && editorLangId =~ /abap|cds|xml/ && abapfs:showActivate "
+        }
+      ],
+      "editor/title/run": [
+        {
+          "command": "abapfs.tableContents",
+          "when": "resourceScheme == adt && abapfs:showTableContentIcon"
+        }
+      ],
+      "scm/title": [
+        {
+          "command": "abapfs.refreshAbapGit",
+          "group": "navigation",
+          "when": "scmProvider =~ /abapGit_/"
+        },
+        {
+          "command": "abapfs.pushAbapGit",
+          "group": "navigation",
+          "when": "scmProvider =~ /abapGit_/"
+        },
+        {
+          "command": "abapfs.pullAbapGit",
+          "group": "navigation",
+          "when": "scmProvider =~ /abapGit_/"
+        }
+      ],
+      "scm/resourceGroup/context": [
+        {
+          "command": "abapfs.filterScmGroup",
+          "group": "inline",
+          "when": "scmProvider =~ /^ABAP/ && scmResourceGroup != recent && scmResourceGroup =~ /^(?!unchanged)/"
+        },
+        {
+          "command": "abapfs.clearScmGroup",
+          "group": "inline",
+          "when": "scmProvider =~ /^ABAP/"
+        },
+        {
+          "command": "abapfs.addAbapGit",
+          "group": "inline",
+          "when": "scmProvider =~ /abapGit_/ && scmResourceGroup != staged"
+        },
+        {
+          "command": "abapfs.removeAbapGit",
+          "group": "inline",
+          "when": "scmProvider =~ /abapGit_/ && scmResourceGroup == staged"
+        }
+      ],
+      "scm/resourceState/context": [
+        {
+          "command": "abapfs.opendiff",
+          "group": "inline",
+          "when": "scmProvider =~ /^ABAP/"
+        },
+        {
+          "command": "abapfs.openrevstate",
+          "group": "inline",
+          "when": "scmProvider =~ /^ABAP/"
+        },
+        {
+          "command": "abapfs.opendiffNormalized",
+          "group": "inline",
+          "when": "scmProvider =~ /^ABAP/"
+        },
+        {
+          "command": "abapfs.addAbapGit",
+          "group": "inline",
+          "when": "scmProvider =~ /abapGit_/ && scmResourceGroup != staged"
+        },
+        {
+          "command": "abapfs.removeAbapGit",
+          "group": "inline",
+          "when": "scmProvider =~ /abapGit_/ && scmResourceGroup == staged"
+        }
+      ],
+      "scm/resourceFolder/context": [
+        {
+          "command": "abapfs.addAbapGit",
+          "group": "inline",
+          "when": "scmProvider =~ /abapGit_/ && scmResourceGroup != staged"
+        },
+        {
+          "command": "abapfs.removeAbapGit",
+          "group": "inline",
+          "when": "scmProvider =~ /abapGit_/ && scmResourceGroup != unstaged"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "abapfs.createtestinclude",
+          "when": "resourceScheme == adt && resourceFilename =~ /.clas\\.abap$/",
+          "group": "2_workspace@1"
+        },
+        {
+          "command": "abapfs.create",
+          "when": "resourceScheme == adt",
+          "group": "2_workspace@1"
+        },
+        {
+          "command": "abapfs.addfavourite",
+          "when": "resourceScheme == adt",
+          "group": "2_workspace@1"
+        },
+        {
+          "command": "abapfs.search",
+          "when": "resourceScheme == adt",
+          "group": "4_search@1"
+        }
+      ],
+      "debug/variables/context": [
+        {
+          "command": "abapfs.exportToJson",
+          "when": "debugType == abap"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "ABAP-FS configuration",
+      "properties": {
+        "abapfs.remote": {
+          "type": "object",
+          "description": "ABAP systems",
+          "patternProperties": {
+            "[a-zA-Z][a-zA-Z0-9_]+": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "description": "Server base URL. the http(s) URL of your SAP dev server",
+                  "$comment": "https://<myserver>:<myport>",
+                  "default": "https://myserver:44300"
+                },
+                "username": {
+                  "type": "string",
+                  "description": "User name",
+                  "default": "developer"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "Password",
+                  "default": ""
+                },
+                "client": {
+                  "type": "string",
+                  "description": "Client",
+                  "format": "[0-9][0-9][0-9]",
+                  "minLength": 3,
+                  "maxLength": 3,
+                  "default": "001"
+                },
+                "language": {
+                  "type": "string",
+                  "description": "Login language",
+                  "format": "[a-zA-Z][a-zA-Z]",
+                  "minLength": 2,
+                  "maxLength": 2,
+                  "default": "en"
+                },
+                "atcapprover": {
+                  "type": "string",
+                  "description": "Default ATC approver",
+                  "default": ""
+                },
+                "allowSelfSigned": {
+                  "type": "boolean",
+                  "title": "Do not validate SSL certificates (lowers the connection security)",
+                  "default": false
+                },
+                "customCA": {
+                  "type": "string",
+                  "title": "Custom certificate authority certificate",
+                  "default": "/secrets/myCA.pem"
+                },
+                "diff_formatter": {
+                  "type": "string",
+                  "anyOf": [
+                    "ADT formatter",
+                    "AbapLint",
+                    "simple"
+                  ],
+                  "default": "ADT formatter"
+                },
+                "maxDebugThreads": {
+                  "type": "integer",
+                  "description": "Maximum number of concurrent debug threads per session",
+                  "minimum": 1,
+                  "maximum": 20,
+                  "default": 4
+                },
+                "oauth": {
+                  "type": "object",
+                  "properties": {
+                    "clientId": {
+                      "type": "string",
+                      "title": "Client ID"
+                    },
+                    "clientSecret": {
+                      "type": "string",
+                      "title": "Client secret"
+                    },
+                    "loginUrl": {
+                      "type": "string",
+                      "title": "Login Url"
+                    },
+                    "saveCredentials": {
+                      "type": "boolean",
+                      "title": "Save oauth tokens"
+                    }
+                  },
+                  "required": [
+                    "clientId",
+                    "clientSecret",
+                    "loginUrl"
+                  ]
+                },
+                "trace": {
+                  "type": "object",
+                  "title": "Trace API or HTTP calls to mongoDB",
+                  "mongoUrl": {
+                    "type": "string",
+                    "title": "MongoDb url",
+                    "default": "mongodb://127.0.0.1:27017"
+                  },
+                  "api methods": {
+                    "type": "boolean"
+                  },
+                  "http_calls": {
+                    "type": "boolean"
+                  },
+                  "required": [
+                    "mongoUrl",
+                    "api_methods",
+                    "http_calls"
+                  ],
+                  "default": {
+                    "mongoUrl": "mongodb://127.0.0.1:27017",
+                    "http_calls": true,
+                    "api_methods": true
+                  }
+                },
+                "sapGui": {
+                  "type": "object",
+                  "description": "SapGUI integration (optional, default guessed from URL)",
+                  "properties": {
+                    "disabled": {
+                      "type": "boolean"
+                    },
+                    "group": {
+                      "type": "string",
+                      "description": "Group (for load balancing)"
+                    },
+                    "messageServer": {
+                      "type": "string",
+                      "description": "Message server (for load balancing)"
+                    },
+                    "messageServerPort": {
+                      "type": "string",
+                      "description": "Message server port (for load balancing)",
+                      "format": "[0-9][0-9][0-9][0-9]",
+                      "default": "3600"
+                    },
+                    "server": {
+                      "type": "string",
+                      "description": "Server (without load balancing)"
+                    },
+                    "systemNumber": {
+                      "type": "string",
+                      "description": "System number (without load balancing)",
+                      "minLength": 2,
+                      "maxLength": 2,
+                      "format": "\n\n"
+                    },
+                    "routerString": {
+                      "type": "string",
+                      "description": "Router String"
+                    },
+                    "guiType": {
+                      "type": "string",
+                      "default": "SAPGUI",
+                      "description": "Use SAPGUI or Webgui",
+                      "enum": [
+                        "SAPGUI",
+                        "WEBGUI_CONTROLLED",
+                        "WEBGUI_UNSAFE",
+                        "WEBGUI_UNSAFE_EMBEDDED"
+                      ],
+                      "markdownEnumDescriptions": [
+                        "Use SAPgui for executing",
+                        "Use Webgui in chrome for executing without exposing passwords",
+                        "Use Webgui in your browser for executing \n> $(warning) **might expose your password**",
+                        "Use Webgui embedded in vscode for executing \n> $(warning) **might expose your password**"
+                      ]
+                    },
+                    "browserPath": {
+                      "type": "string",
+                      "default": "chrome",
+                      "description": "Browser path for controlled webgui"
+                    }
+                  }
+                }
+              },
+              "required": [
+                "url",
+                "username"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "configurationDefaults": {
+      "[abap]": {
+        "editor.formatOnSave": true
+      }
+    }
+  }
+}
