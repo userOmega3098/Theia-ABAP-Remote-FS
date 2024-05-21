@@ -28,7 +28,8 @@
     "remote"
   ],
   "extensionDependencies": [
-    "larshp.vscode-abap"
+    "larshp.vscode-abap",
+    "hudakf.cds"
   ],
   "activationEvents": [
     "onFileSystem:adt",
