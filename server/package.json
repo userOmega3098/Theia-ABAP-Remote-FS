@@ -5,7 +5,7 @@
   "description": "Language server for ABAP remote filesystem",
   "repository": {
     "type": "git",
-    "url": "https://github.com/marcellourbani/vscode_abap_remote_fs.git"
+    "url": "https://github.com/userOmega3098/Theia-ABAP-Remote-FS.git"
   },
   "keywords": [
     "ABAP"

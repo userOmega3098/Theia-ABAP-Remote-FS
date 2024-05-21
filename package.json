@@ -3,14 +3,14 @@
   "displayName": "ABAP remote filesystem",
   "description": "Work on your ABAP code straight from the server",
   "version": "1.7.10",
-  "publisher": "murbani",
+  "publisher": "userOmega3098",
   "license": "MIT",
   "icon": "client/images/abapfs_logo.png",
   "author": {
-    "email": "marcello.urbani@gmail.com",
-    "name": "Marcello Urbani"
+    "email": "ssakthikumaran@kaartech.com",
+    "name": "userOmega3098"
   },
-  "homepage": "https://github.com/marcellourbani/vscode_abap_remote_fs",
+  "homepage": "https://github.com/userOmega3098/Theia-ABAP-Remote-FS",
   "engines": {
     "vscode": "^1.39.0"
   },
@@ -19,7 +19,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/marcellourbani/vscode_abap_remote_fs.git"
+    "url": "https://github.com/userOmega3098/Theia-ABAP-Remote-FS.git"
   },
   "keywords": [
     "ABAP",

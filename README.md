@@ -24,8 +24,8 @@ You can also look up ABAP objects by name with command
 
 ## Links
 
-- [Getting started](https://github.com/marcellourbani/vscode_abap_remote_fs/wiki/getting-started)
-- [wiki/documentation](https://github.com/marcellourbani/vscode_abap_remote_fs/wiki)
+- [Getting started](https://github.com/userOmega3098/Theia-ABAP-Remote-FS/wiki/getting-started)
+- [wiki/documentation](https://github.com/userOmega3098/Theia-ABAP-Remote-FS/wiki)
 - [blog post by Leon Hassan](https://blogs.sap.com/2019/12/06/abap-development-in-vs-code)
 
 **Unless your system is very modern (7.51 or later I think), write support will require you to install [this plugin](https://github.com/marcellourbani/abapfs_extensions)** in your dev server to enable. Browsing works even without it
@@ -51,7 +51,7 @@ Compatibility with [abaplint](https://marketplace.visualstudio.com/items?itemNam
 
 ## setup
 
-Check the system requirements on the [wiki](https://github.com/marcellourbani/vscode_abap_remote_fs/wiki) and follow the [installation instructions](https://github.com/marcellourbani/vscode_abap_remote_fs/wiki/installation)
+Check the system requirements on the [wiki](https://github.com/userOmega3098/Theia-ABAP-Remote-FS/wiki) and follow the [installation instructions](https://github.com/userOmega3098/Theia-ABAP-Remote-FS/wiki/installation)
 
 You will end up with one or more server connections like this in your vs code configuration:
 

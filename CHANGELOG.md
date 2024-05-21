@@ -274,7 +274,7 @@
 
 ### Fixed
 
-- [#156 improved debugger session handling](https://github.com/marcellourbani/vscode_abap_remote_fs/issues/156)
+- [#156 improved debugger session handling](https://github.com/userOmega3098/Theia-ABAP-Remote-FS/issues/156)
 
 ## [0.12.12] 2021-04-27
 
@@ -325,15 +325,15 @@
 
 ### Fixed
 
-- [#141 changes to sapgui connections while connected](https://github.com/marcellourbani/vscode_abap_remote_fs/issues/141)
+- [#141 changes to sapgui connections while connected](https://github.com/userOmega3098/Theia-ABAP-Remote-FS/issues/141)
 - improved password deletion (cleanup cached value)
-- [#124 spaces not allowed in config name](https://github.com/marcellourbani/vscode_abap_remote_fs/issues/124)
+- [#124 spaces not allowed in config name](https://github.com/userOmega3098/Theia-ABAP-Remote-FS/issues/124)
 
 ## [0.10.2] 2021-03-28
 
 ### Fixed
 
-- [#150 report errors running unit tests](https://github.com/marcellourbani/vscode_abap_remote_fs/issues/150)
+- [#150 report errors running unit tests](https://github.com/userOmega3098/Theia-ABAP-Remote-FS/issues/150)
 - better support for includes in unit tests
 - graceful degradation in unit test reporting
 
@@ -341,7 +341,7 @@
 
 ### Fixed
 
-- [#151 find references fails to complete](https://github.com/marcellourbani/vscode_abap_remote_fs/issues/151)
+- [#151 find references fails to complete](https://github.com/userOmega3098/Theia-ABAP-Remote-FS/issues/151)
 
 ## [0.10.0] 2021-03-24
 
@@ -351,8 +351,8 @@
 
 ### Fixed
 
-- [#148 create transport configuration when missing](https://github.com/marcellourbani/vscode_abap_remote_fs/issues/148)
-- [#147 autologin,check if extenson is present](https://github.com/marcellourbani/vscode_abap_remote_fs/issues/147)
+- [#148 create transport configuration when missing](https://github.com/userOmega3098/Theia-ABAP-Remote-FS/issues/148)
+- [#147 autologin,check if extenson is present](https://github.com/userOmega3098/Theia-ABAP-Remote-FS/issues/147)
 
 ## [0.9.3] 2021-03-15
 
@@ -380,9 +380,9 @@
 
 ### Fixed
 
-- [[#131](https://github.com/marcellourbani/vscode_abap_remote_fs/issues/131)]
-- [#138](https://github.com/marcellourbani/vscode_abap_remote_fs/issues/138)
-- [#130 faforite expansion not working](https://github.com/marcellourbani/vscode_abap_remote_fs/issues/130)
+- [[#131](https://github.com/userOmega3098/Theia-ABAP-Remote-FS/issues/131)]
+- [#138](https://github.com/userOmega3098/Theia-ABAP-Remote-FS/issues/138)
+- [#130 faforite expansion not working](https://github.com/userOmega3098/Theia-ABAP-Remote-FS/issues/130)
 - treat authorizations and data elements as readable objects
 
 ## [0.8.12] 2020-11-02
