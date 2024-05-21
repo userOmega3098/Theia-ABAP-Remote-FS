@@ -28,9 +28,7 @@
     "remote"
   ],
   "extensionDependencies": [
-    "larshp.vscode-abap",
-    "hudakf.cds",
-    "murbani.winregistry"
+    "larshp.vscode-abap"
   ],
   "activationEvents": [
     "onFileSystem:adt",
