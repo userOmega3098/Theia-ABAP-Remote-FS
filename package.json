@@ -28,7 +28,7 @@
     "remote"
   ],
   "extensionDependencies": [
-    "larshp.vscode-abap",
+    "userOmega3098.vscode-abap",
     "hudakf.cds"
   ],
   "activationEvents": [
